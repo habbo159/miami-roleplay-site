@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Miami Roleplay | ERLC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-950: #070b14;
+    --navy-900: #0c1220;
+    --navy-800: #121a2e;
+    --navy-700: #1a2440;
+    --blue-500: #3b6bf5;
+    --blue-400: #5c86ff;
+    --red-600: #d3222a;
+    --red-500: #ef3b3b;
+    --amber-400: #f2b53d;
+    --steel-100: #eef1f7;
+    --steel-300: #b8c2d9;
+    --steel-500: #7c88a6;
+    --line: rgba(184, 194, 217, 0.14);
+    --font-display: 'Oswald', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  * { box-sizing: inherit; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--navy-950);
+    color: var(--steel-100);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+
+  /* ---------- Strobe bar ---------- */
+  .strobe {
+    height: 4px;
+    display: flex;
+    width: 100%;
+  }
+  .strobe span { flex: 1; }
+  .strobe .r { background: var(--red-500); animation: flashR 1s steps(1) infinite; }
+  .strobe .b { background: var(--blue-400); animation: flashB 1s steps(1) infinite; }
+  @keyframes flashR { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.15; } }
+  @keyframes flashB { 0%, 49% { opacity: 0.15; } 50%, 100% { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .strobe .r, .strobe .b { animation: none; opacity: 1; }
+  }
+
+  /* ---------- Header / nav ---------- */
+  header {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: rgba(7, 11, 20, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .brand img {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+  }
+  .brand-text {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+  }
+  .brand-text small {
+    display: block;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.68rem;
+    color: var(--steel-500);
+    letter-spacing: 0.04em;
+  }
+  nav { display: flex; gap: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    background: none;
+    border: none;
+    color: var(--steel-300);
+    padding: 9px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  nav button:hover { color: var(--steel-100); background: var(--navy-800); }
+  nav button.active { color: var(--navy-950); background: var(--steel-100); }
+  nav button:focus-visible, button:focus-visible, a:focus-visible {
+    outline: 2px solid var(--amber-400);
+    outline-offset: 2px;
+  }
+
+  main { max-width: 1120px; margin: 0 auto; padding: 0 24px 90px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ---------- Home ---------- */
+  .hero {
+    padding: 88px 0 56px;
+    text-align: center;
+  }
+  .hero img.logo {
+    width: 108px;
+    height: 108px;
+    margin: 0 auto 28px;
+    border-radius: 22px;
+    border: 1px solid var(--line);
+    box-shadow: 0 0 0 6px rgba(59, 107, 245, 0.08);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin: 0 0 12px;
+  }
+  .hero p.tagline {
+    color: var(--steel-300);
+    font-size: 1.05rem;
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+  .join-row {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--navy-900);
+  }
+  .join-row .label {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--steel-500);
+    border-right: 1px solid var(--line);
+    background: var(--navy-800);
+  }
+  .join-row .code {
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--amber-400);
+    letter-spacing: 0.06em;
+  }
+  .join-row button {
+    border: none;
+    border-left: 1px solid var(--line);
+    background: var(--blue-500);
+    color: white;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .join-row button:hover { background: var(--blue-400); }
+
+  .divider {
+    height: 1px;
+    background: var(--line);
+    margin: 8px 0 56px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .feature-grid > div {
+    background: var(--navy-900);
+    padding: 26px 22px;
+  }
+  .feature-grid .code {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--blue-400);
+    margin-bottom: 10px;
+  }
+  .feature-grid h3 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  .feature-grid p {
+    color: var(--steel-500);
+    font-size: 0.88rem;
+    line-height: 1.55;
+    margin: 0;
+  }
+  @media (max-width: 700px) {
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Section heading (shared) ---------- */
+  .page-head { padding: 64px 0 36px; }
+  .page-head h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+  .page-head p {
+    color: var(--steel-500);
+    max-width: 560px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ---------- Apply ---------- */
+  .dept-list { display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 60px; }
+  .dept {
+    background: var(--navy-900);
+    padding: 28px 28px;
+    display: grid;
+    grid-template-columns: 160px 1fr auto;
+    gap: 28px;
+    align-items: start;
+  }
+  .dept .tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 6px;
+    width: fit-content;
+    letter-spacing: 0.02em;
+  }
+  .dept.leo .tag { color: var(--blue-400); background: rgba(59, 107, 245, 0.12); }
+  .dept.fire .tag { color: var(--red-500); background: rgba(239, 59, 59, 0.12); }
+  .dept.dot .tag { color: var(--amber-400); background: rgba(242, 181, 61, 0.12); }
+  .dept.staff .tag { color: var(--steel-300); background: rgba(184, 194, 217, 0.1); }
+  .dept h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 10px 0 0;
+  }
+  .dept-body h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .dept-body .sub {
+    color: var(--steel-500);
+    font-size: 0.85rem;
+    margin: 0 0 14px;
+  }
+  .dept-body ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px 20px;
+  }
+  .dept-body li {
+    font-size: 0.86rem;
+    color: var(--steel-300);
+    padding-left: 15px;
+    position: relative;
+    line-height: 1.4;
+  }
+  .dept-body li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--steel-500);
+  }
+  .dept-cta {
+    align-self: center;
+    white-space: nowrap;
+    background: var(--navy-800);
+    border: 1px solid var(--line);
+    color: var(--steel-100);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.84rem;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .dept-cta:hover { border-color: var(--blue-400); color: var(--blue-400); }
+  @media (max-width: 760px) {
+    .dept { grid-template-columns: 1fr; }
+    .dept-body ul { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Executive Team ---------- */
+  .exec-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding-bottom: 70px;
+  }
+  .exec-card {
+    background: var(--navy-900);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 26px 22px 22px;
+    text-align: center;
+  }
+  .badge-frame {
+    width: 84px;
+    height: 92px;
+    margin: 0 auto 16px;
+    position: relative;
+    clip-path: polygon(50% 0%, 100% 18%, 100% 72%, 50% 100%, 0% 72%, 0% 18%);
+    background: linear-gradient(160deg, var(--blue-500), var(--red-600));
+    padding: 2px;
+  }
+  .badge-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(50% 0%, 100% 18%, 100% 72%, 50% 100%, 0% 72%, 0% 18%);
+  }
+  .exec-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  .exec-card .rank {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: var(--amber-400);
+    background: rgba(242, 181, 61, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  @media (max-width: 760px) {
+    .exec-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 460px) {
+    .exec-grid { grid-template-columns: 1fr; }
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 26px 24px 40px;
+    text-align: center;
+    color: var(--steel-500);
+    font-size: 0.8rem;
+  }
+
+  /* ---------- About ---------- */
+  .about-body {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 40px;
+    padding-bottom: 70px;
+  }
+  .about-body p {
+    color: var(--steel-300);
+    line-height: 1.75;
+    font-size: 0.98rem;
+    margin: 0 0 18px;
+  }
+  .about-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    height: fit-content;
+  }
+  .about-stats div {
+    background: var(--navy-900);
+    padding: 18px 20px;
+  }
+  .about-stats .k {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--steel-500);
+    letter-spacing: 0.03em;
+    margin-bottom: 4px;
+  }
+  .about-stats .v {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  @media (max-width: 760px) {
+    .about-body { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Store ---------- */
+  .store-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding-bottom: 70px;
+  }
+  .store-card {
+    background: var(--navy-900);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 24px 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .store-card .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--blue-400);
+    background: rgba(59, 107, 245, 0.12);
+    padding: 4px 9px;
+    border-radius: 6px;
+    width: fit-content;
+    margin-bottom: 14px;
+  }
+  .store-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  .store-card p {
+    color: var(--steel-500);
+    font-size: 0.86rem;
+    line-height: 1.55;
+    margin: 0 0 20px;
+    flex-grow: 1;
+  }
+  .store-card button {
+    border: 1px solid var(--line);
+    background: var(--navy-800);
+    color: var(--steel-100);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.84rem;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .store-card button:hover { border-color: var(--blue-400); color: var(--blue-400); }
+  @media (max-width: 760px) {
+    .store-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 500px) {
+    .store-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- Rules ---------- */
+  .rules-list {
+    counter-reset: rule;
+    padding-bottom: 70px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0;
+  }
+  .rules-list li {
+    counter-increment: rule;
+    background: var(--navy-900);
+    list-style: none;
+    padding: 16px 22px 16px 58px;
+    position: relative;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--steel-300);
+  }
+  .rules-list li::before {
+    content: counter(rule);
+    position: absolute;
+    left: 20px;
+    top: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--blue-400);
+  }
+  .rules-note {
+    color: var(--steel-500);
+    font-size: 0.9rem;
+    padding: 20px 0 50px;
+  }
+
+  /* ---------- Application modal ---------- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 6, 12, 0.72);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 60px 20px;
+    overflow-y: auto;
+    z-index: 100;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--navy-900);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 520px;
+    padding: 30px 30px 26px;
+  }
+  .modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .modal-head .tag { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; padding: 4px 9px; border-radius: 6px; }
+  .leo-tag { color: var(--blue-400); background: rgba(59, 107, 245, 0.12); }
+  .fire-tag { color: var(--red-500); background: rgba(239, 59, 59, 0.12); }
+  .dot-tag { color: var(--amber-400); background: rgba(242, 181, 61, 0.12); }
+  .staff-tag { color: var(--steel-300); background: rgba(184, 194, 217, 0.1); }
+  .modal h3 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 10px 0 20px;
+  }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--steel-500);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 4px;
+  }
+  .modal-close:hover { color: var(--steel-100); }
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--steel-300);
+    margin-bottom: 6px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: var(--navy-800);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--steel-100);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+  }
+  .field textarea { min-height: 80px; resize: vertical; }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: 2px solid var(--amber-400);
+    outline-offset: 1px;
+    border-color: transparent;
+  }
+  .modal-submit {
+    width: 100%;
+    border: none;
+    background: var(--blue-500);
+    color: white;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background 0.15s;
+  }
+  .modal-submit:hover { background: var(--blue-400); }
+  .modal-submit:disabled { opacity: 0.6; cursor: default; }
+  .modal-status {
+    margin-top: 14px;
+    font-size: 0.85rem;
+    text-align: center;
+    display: none;
+  }
+  .modal-status.ok { color: #4ade80; display: block; }
+  .modal-status.err { color: var(--red-500); display: block; }
+  .modal-note {
+    color: var(--steel-500);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="strobe"><span class="r"></span><span class="b"></span></div>
+
+<header>
+  <div class="nav-wrap">
+    <a class="brand" href="#home" onclick="setView('home')">
+      <img src="https://cdn.discordapp.com/icons/1550311452043382807/30401a7e9b8994ab8ac291c73977f67d.webp?size=128" alt="Miami Roleplay logo">
+      <span class="brand-text">MIAMI ROLEPLAY<small>ERLC ROLEPLAY COMMUNITY</small></span>
+    </a>
+    <nav>
+      <button data-view="home" onclick="setView('home')">Home</button>
+      <button data-view="about" onclick="setView('about')">About</button>
+      <button data-view="apply" onclick="setView('apply')">Apply</button>
+      <button data-view="store" onclick="setView('store')">Store</button>
+      <button data-view="rules" onclick="setView('rules')">Rules</button>
+      <button data-view="team" onclick="setView('team')">Executive Team</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <section class="view" id="view-home">
+    <div class="hero">
+      <img class="logo" src="https://cdn.discordapp.com/icons/1550311452043382807/30401a7e9b8994ab8ac291c73977f67d.webp?size=256" alt="Miami Roleplay logo">
+      <h1>Miami Roleplay</h1>
+      <p class="tagline">A serious ERLC roleplay community built around realistic law enforcement, fire &amp; EMS, and DOT operations across Liberty County.</p>
+      <div class="join-row">
+        <span class="label">JOIN CODE</span>
+        <span class="code" id="joincode">MIRP</span>
+        <button onclick="copyCode()">Copy</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="feature-grid">
+      <div>
+        <div class="code">LEO</div>
+        <h3>Law Enforcement</h3>
+        <p>Patrol, traffic stops and felony response run under real department structure and radio discipline.</p>
+      </div>
+      <div>
+        <div class="code">FIRE / EMS</div>
+        <h3>Fire &amp; Rescue</h3>
+        <p>Medical response, extrication and structure fires handled by a trained Fire/EMS division.</p>
+      </div>
+      <div>
+        <div class="code">DOT</div>
+        <h3>Transportation</h3>
+        <p>Road maintenance, signage and traffic control keeping Liberty County moving.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="view" id="view-about">
+    <div class="page-head">
+      <h2>About Miami Roleplay</h2>
+      <p>How the server started and who's behind it.</p>
+    </div>
+    <div class="about-body">
+      <div>
+        <p>Miami Roleplay launched on September 17, 2026, as an ERLC community built around structured, realistic law enforcement, fire &amp; EMS, and DOT roleplay across Liberty County.</p>
+        <p>The server is run by Vex, who previously founded and owned CSRP, an earlier roleplay community. That experience running a server from the ground up shaped how Miami Roleplay is structured from day one, from department training to how the executive team operates.</p>
+        <p>Since launch, the server has grown quickly, driven by an experienced ownership team and a community built around consistent, quality roleplay rather than short-term hype.</p>
+      </div>
+      <div class="about-stats">
+        <div><div class="k">FOUNDED</div><div class="v">September 17, 2026</div></div>
+        <div><div class="k">FOUNDER</div><div class="v">Vex</div></div>
+        <div><div class="k">FOUNDER'S BACKGROUND</div><div class="v">Previously owned CSRP</div></div>
+        <div><div class="k">GAME</div><div class="v">ERLC (Roblox)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLY -->
+  <section class="view" id="view-apply">
+    <div class="page-head">
+      <h2>Applications</h2>
+      <p>Pick a department below and read its requirements before you apply. Every application is reviewed by that department's leadership.</p>
+    </div>
+
+    <div class="dept-list">
+      <div class="dept leo">
+        <div><span class="tag">LEO</span></div>
+        <div class="dept-body">
+          <h3>Law Enforcement</h3>
+          <p class="sub">Patrol, traffic enforcement, criminal response</p>
+          <ul>
+            <li>Age 13 or older</li>
+            <li>Working microphone required</li>
+            <li>Clean in-game moderation history</li>
+            <li>Pass a short interview</li>
+            <li>Complete field training before solo patrol</li>
+            <li>Active in the Discord server</li>
+          </ul>
+        </div>
+        <button class="dept-cta" onclick="openModal('leo')">Apply for LEO</button>
+      </div>
+
+      <div class="dept fire">
+        <div><span class="tag">FIRE/EMS</span></div>
+        <div class="dept-body">
+          <h3>Fire &amp; EMS</h3>
+          <p class="sub">Medical response, rescue, structure fires</p>
+          <ul>
+            <li>Age 13 or older</li>
+            <li>Working microphone required</li>
+            <li>Comfortable with medical roleplay scenarios</li>
+            <li>Pass a short interview</li>
+            <li>Complete probationary shift ride-alongs</li>
+            <li>Active in the Discord server</li>
+          </ul>
+        </div>
+        <button class="dept-cta" onclick="openModal('fire')">Apply for Fire/EMS</button>
+      </div>
+
+      <div class="dept dot">
+        <div><span class="tag">DOT</span></div>
+        <div class="dept-body">
+          <h3>Department of Transportation</h3>
+          <p class="sub">Road work, signage, traffic control</p>
+          <ul>
+            <li>Age 12 or older</li>
+            <li>Understands basic traffic control roleplay</li>
+            <li>Reliable attendance during road events</li>
+            <li>Active in the Discord server</li>
+          </ul>
+        </div>
+        <button class="dept-cta" onclick="openModal('dot')">Apply for DOT</button>
+      </div>
+
+      <div class="dept staff">
+        <div><span class="tag">STAFF</span></div>
+        <div class="dept-body">
+          <h3>Staff Team</h3>
+          <p class="sub">Server moderation and community management</p>
+          <ul>
+            <li>Age 15 or older</li>
+            <li>Prior moderation experience preferred</li>
+            <li>Good standing with no prior bans</li>
+            <li>Available a consistent number of hours weekly</li>
+            <li>Calm, fair judgment under pressure</li>
+            <li>Active in the Discord server</li>
+          </ul>
+        </div>
+        <button class="dept-cta" onclick="openModal('staff')">Apply for Staff</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORE -->
+  <section class="view" id="view-store">
+    <div class="page-head">
+      <h2>Store</h2>
+      <p>Perks and upgrades for Miami Roleplay. Open a Discord ticket to purchase — a team member will handle payment and delivery.</p>
+    </div>
+    <div class="store-grid">
+      <div class="store-card">
+        <span class="tag">RANK</span>
+        <h3>VIP</h3>
+        <p>Priority server queue, a colored name and custom Discord role, and access to VIP-only vehicles and Discord channels.</p>
+        <button onclick="openStoreTicket('VIP')">Open a ticket</button>
+      </div>
+      <div class="store-card">
+        <span class="tag">DISCORD</span>
+        <h3>Private VC</h3>
+        <p>Your own permanent voice channel on the Discord server that you control and can rename, lock, or invite friends into.</p>
+        <button onclick="openStoreTicket('Private VC')">Open a ticket</button>
+      </div>
+      <div class="store-card">
+        <span class="tag">IN-GAME</span>
+        <h3>Private Office</h3>
+        <p>A personal office space in-game for meetings, storage, or roleplay use, separate from department offices.</p>
+        <button onclick="openStoreTicket('Private Office')">Open a ticket</button>
+      </div>
+      <div class="store-card">
+        <span class="tag">CUSTOM</span>
+        <h3>Custom License Plate</h3>
+        <p>Pick your own in-game license plate text (within naming rules) for any vehicle you own.</p>
+        <button onclick="openStoreTicket('Custom License Plate')">Open a ticket</button>
+      </div>
+      <div class="store-card">
+        <span class="tag">CUSTOM</span>
+        <h3>Custom Vehicle Livery</h3>
+        <p>A custom paint job or livery applied to one of your vehicles, designed to your spec where the game allows it.</p>
+        <button onclick="openStoreTicket('Custom Vehicle Livery')">Open a ticket</button>
+      </div>
+      <div class="store-card">
+        <span class="tag">ACCESS</span>
+        <h3>Priority Queue</h3>
+        <p>Skip the general join queue and get into busy sessions faster.</p>
+        <button onclick="openStoreTicket('Priority Queue')">Open a ticket</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RULES -->
+  <section class="view" id="view-rules">
+    <div class="page-head">
+      <h2>Server rules</h2>
+      <p>Read these before joining. Breaking them can result in a warning, kick, or ban depending on severity.</p>
+    </div>
+    <p class="rules-note" id="rules-placeholder">Rules haven't been added yet — send over the rules text and it'll go here.</p>
+    <ol class="rules-list" id="rules-list" style="display:none;"></ol>
+  </section>
+
+  <!-- EXECUTIVE TEAM -->
+  <section class="view" id="view-team">
+    <div class="page-head">
+      <h2>Executive team</h2>
+      <p>The founders and owners responsible for running Miami Roleplay.</p>
+    </div>
+
+    <div class="exec-grid">
+      <div class="exec-card">
+        <div class="badge-frame"><img src="https://wallpapers.com/images/hd/glowing-eyes-for-cool-pfp-for-discord-o01oqgxlvi4t3i4u.jpg" alt="Vex"></div>
+        <h3>Vex</h3>
+        <span class="rank">FOUNDER</span>
+      </div>
+      <div class="exec-card">
+        <div class="badge-frame"><img src="https://cdn.discordapp.com/avatars/1389414970630082675/0c63d19d0388b6f4cb70de3540cb39ba.webp?size=256" alt="Seb"></div>
+        <h3>Seb</h3>
+        <span class="rank">CO-FOUNDER</span>
+      </div>
+      <div class="exec-card">
+        <div class="badge-frame"><img src="https://cdn.discordapp.com/avatars/755064670670553140/eb39ba797947757b78c5f918813f0531.webp?size=256" alt="King A"></div>
+        <h3>King A</h3>
+        <span class="rank">OWNER</span>
+      </div>
+      <div class="exec-card">
+        <div class="badge-frame"><img src="https://cdn.discordapp.com/avatars/1230525624595124257/0af88f1fcee17d2ad23be1faefc9df86.webp?size=256" alt="Jacob"></div>
+        <h3>Jacob</h3>
+        <span class="rank">OWNER</span>
+      </div>
+      <div class="exec-card">
+        <div class="badge-frame"><img src="https://cdn.discordapp.com/avatars/1466278421272334440/7d1e4b1348cff7de66e3169bcdee5509.webp?size=256" alt="Cakumyt2"></div>
+        <h3>Cakumyt2</h3>
+        <span class="rank">CO-OWNER</span>
+      </div>
+      <div class="exec-card">
+        <div class="badge-frame"><img src="https://cdn.discordapp.com/avatars/1548408338893639813/37f33cede78286e39e2dd95d499083c2.webp?size=256" alt="Jackson"></div>
+        <h3>Jackson</h3>
+        <span class="rank">CO-OWNER</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>Miami Roleplay &mdash; ERLC Community. Not affiliated with Roblox Corporation or Police Roleplay Community.</footer>
+
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this) closeModal()">
+  <div class="modal" id="modal-box" role="dialog" aria-modal="true"></div>
+</div>
+
+<script>
+  var DEPARTMENTS = {
+    leo: {
+      name: 'Law Enforcement',
+      tagClass: 'leo',
+      webhook: 'https://discord.com/api/webhooks/1551793699292192839/2v_X-EpQ6ydz72Q2ZDkx2yHYeaijMWPiBzm4PeVlr9pFk7JU4wnhyDztvi_vT8GV_qFL',
+      color: 3910133,
+      fields: [
+        { id: 'roblox', label: 'Roblox username', type: 'text', required: true },
+        { id: 'discord', label: 'Discord username', type: 'text', required: true },
+        { id: 'age', label: 'Age', type: 'text', required: true },
+        { id: 'timezone', label: 'Timezone', type: 'text', required: true },
+        { id: 'experience', label: 'Prior LEO / roleplay experience', type: 'textarea', required: false },
+        { id: 'why', label: 'Why do you want to join LEO?', type: 'textarea', required: true }
+      ]
+    },
+    fire: {
+      name: 'Fire & EMS',
+      tagClass: 'fire',
+      webhook: 'https://discord.com/api/webhooks/1551793787255136276/qqviloXO1LC_NP5N5fAoJRpsALdl1pnz3bl8c3su-dKOvxCmZ12CqrEVDMcFxk5_Gf_u',
+      color: 15682619,
+      fields: [
+        { id: 'roblox', label: 'Roblox username', type: 'text', required: true },
+        { id: 'discord', label: 'Discord username', type: 'text', required: true },
+        { id: 'age', label: 'Age', type: 'text', required: true },
+        { id: 'timezone', label: 'Timezone', type: 'text', required: true },
+        { id: 'experience', label: 'Prior Fire/EMS or roleplay experience', type: 'textarea', required: false },
+        { id: 'why', label: 'Why do you want to join Fire/EMS?', type: 'textarea', required: true }
+      ]
+    },
+    dot: {
+      name: 'Department of Transportation',
+      tagClass: 'dot',
+      webhook: null,
+      color: 15900477,
+      fields: [
+        { id: 'roblox', label: 'Roblox username', type: 'text', required: true },
+        { id: 'discord', label: 'Discord username', type: 'text', required: true },
+        { id: 'age', label: 'Age', type: 'text', required: true },
+        { id: 'why', label: 'Why do you want to join DOT?', type: 'textarea', required: true }
+      ]
+    },
+    staff: {
+      name: 'Staff Team',
+      tagClass: 'staff',
+      webhook: 'https://discord.com/api/webhooks/1551793591683260417/PABtJMPXYEiSJXgD1AwJcCYdKn_3tCVQPXePIFZAMy90-A-nt5vnhm4ZHCUArmbeVdd0',
+      color: 12105912,
+      fields: [
+        { id: 'roblox', label: 'Roblox username', type: 'text', required: true },
+        { id: 'discord', label: 'Discord username', type: 'text', required: true },
+        { id: 'age', label: 'Age', type: 'text', required: true },
+        { id: 'timezone', label: 'Timezone', type: 'text', required: true },
+        { id: 'modexp', label: 'Prior moderation experience', type: 'textarea', required: false },
+        { id: 'hours', label: 'Hours available per week', type: 'text', required: true },
+        { id: 'why', label: 'Why do you want to join Staff?', type: 'textarea', required: true }
+      ]
+    }
+  };
+
+  function fieldHtml(f) {
+    var req = f.required ? 'required' : '';
+    if (f.type === 'textarea') {
+      return '<div class="field"><label for="f-' + f.id + '">' + f.label + '</label>' +
+        '<textarea id="f-' + f.id + '" ' + req + '></textarea></div>';
+    }
+    return '<div class="field"><label for="f-' + f.id + '">' + f.label + '</label>' +
+      '<input id="f-' + f.id + '" type="text" ' + req + '></div>';
+  }
+
+  function openModal(key) {
+    var dept = DEPARTMENTS[key];
+    var box = document.getElementById('modal-box');
+    if (!dept.webhook) {
+      box.innerHTML =
+        '<div class="modal-head"><span class="tag ' + dept.tagClass + '-tag">APPLICATION</span>' +
+        '<button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button></div>' +
+        '<h3>' + dept.name + '</h3>' +
+        '<p class="modal-note">This department\'s application isn\'t connected yet. Reach out on Discord and a ' + dept.name + ' lead will help you apply directly.</p>';
+      document.getElementById('modal-overlay').classList.add('open');
+      return;
+    }
+    var html = '<div class="modal-head"><span class="tag ' + dept.tagClass + '-tag">APPLICATION</span>' +
+      '<button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button></div>' +
+      '<h3>' + dept.name + '</h3>' +
+      '<form id="app-form" onsubmit="return submitApp(event, \'' + key + '\')">';
+    dept.fields.forEach(function (f) { html += fieldHtml(f); });
+    html += '<button class="modal-submit" type="submit" id="modal-submit-btn">Submit application</button>' +
+      '<div class="modal-status" id="modal-status"></div></form>';
+    box.innerHTML = html;
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+
+  function submitApp(evt, key) {
+    evt.preventDefault();
+    var dept = DEPARTMENTS[key];
+    var btn = document.getElementById('modal-submit-btn');
+    var status = document.getElementById('modal-status');
+    var embedFields = [];
+    for (var i = 0; i < dept.fields.length; i++) {
+      var f = dept.fields[i];
+      var el = document.getElementById('f-' + f.id);
+      var val = el.value.trim();
+      if (f.required && !val) {
+        status.className = 'modal-status err';
+        status.textContent = 'Please fill in "' + f.label + '".';
+        return false;
+      }
+      embedFields.push({ name: f.label, value: val || '—', inline: val.length < 40 });
+    }
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+    status.className = 'modal-status';
+    status.textContent = '';
+
+    fetch(dept.webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        embeds: [{
+          title: dept.name + ' Application',
+          color: dept.color,
+          fields: embedFields,
+          timestamp: new Date().toISOString()
+        }]
+      })
+    }).then(function (res) {
+      if (!res.ok) throw new Error('Webhook responded with ' + res.status);
+      btn.textContent = 'Submitted';
+      status.className = 'modal-status ok';
+      status.textContent = 'Application sent. Watch your Discord DMs for a response.';
+      setTimeout(closeModal, 1800);
+    }).catch(function (err) {
+      btn.disabled = false;
+      btn.textContent = 'Submit application';
+      status.className = 'modal-status err';
+      status.textContent = 'Something went wrong sending your application. Try again in a moment.';
+    });
+    return false;
+  }
+
+  function openStoreTicket(item) {
+    var box = document.getElementById('modal-box');
+    box.innerHTML =
+      '<div class="modal-head"><span class="tag leo-tag">STORE</span>' +
+      '<button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button></div>' +
+      '<h3>' + item + '</h3>' +
+      '<p class="modal-note">To purchase ' + item + ', open a ticket in the Miami Roleplay Discord server and let staff know which item you want. A team member will take it from there.</p>';
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function setView(name) {
+    document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+    document.querySelectorAll('nav button').forEach(function(b){ b.classList.remove('active'); });
+    var view = document.getElementById('view-' + name);
+    var btn = document.querySelector('nav button[data-view="' + name + '"]');
+    if (view) view.classList.add('active');
+    if (btn) btn.classList.add('active');
+    window.location.hash = name;
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  }
+  function copyCode() {
+    var text = document.getElementById('joincode').textContent;
+    try {
+      navigator.clipboard.writeText(text);
+    } catch (e) {}
+  }
+  (function init() {
+    var hash = window.location.hash.replace('#', '');
+    var valid = ['home', 'about', 'apply', 'store', 'rules', 'team'];
+    setView(valid.indexOf(hash) !== -1 ? hash : 'home');
+  })();
+</script>
+
+</body>
+</html>
